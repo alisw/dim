@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>WebSocket Test</title>
+</head>
+<body>
+<script>
+var ws;
+window.onload=function(){
+  ws=new WebSocket("ws://pclhcb161:2501/DimClient");
+//  ws.onmessage=function(evt){console.log(evt.data);ws.send("UNSUBSCRIBE /dimService?service=\"SMI/LHCB/LHCB\"");};
+  ws.onmessage=function(evt){console.log(evt.data);};
+  ws.onopen=function(evt){
+//  ws.send("GET /didData.json/src?&node=src&browser=1234");
+//  ws.send("GET /didData.json/src?&node=PCLHCB161.cern.ch&browser=1234");
+//  ws.send("GET /dimBrowser?service=\"*\"");
+//  ws.send("GET /dimBrowser?service=\"LHCB\"");
+  ws.send("GET /dimBrowser.json/src?service=*");
+//  ws.send("GET /dimBrowser.json/src?service=LHCB");
+//  ws.send("GET /dimService?service=\"SMI/LHCB/LHCB\"&nolink=\"NOT_THERE\"");
+  ws.send("SUBSCRIBE /dimService?service=\"SMI/LHCB/LHCB\"&nolink=\"NOT_THERE\"");
+//  ws.send("UNSUBSCRIBE /dimService?service=\"SMI/LHCB/LHCB\"");
+//    ws.send("Hello");
+  }
+}
+window.onclose=function(){
+  ws.close();
+}
+</script>
+</body>
+</html>

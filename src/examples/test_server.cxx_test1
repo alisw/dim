@@ -1,0 +1,45 @@
+#include <dis.hxx>
+#include <iostream>
+#include <string>
+using namespace std;
+
+DimService *taskState;
+
+class TaskCmnd : public DimCommand
+{
+	void commandHandler()
+	{
+		cout << "Command " << getString() << " received" << endl;
+// Calling some code to do something...
+// Can update the state from here or from the main program...
+		taskState->updateService("RUNNING");
+	}
+
+public :
+	TaskCmnd(const char *name) : DimCommand(name,"C") {};
+};
+
+TaskCmnd *taskCmnd;
+
+int main()
+{
+	string serverName, cmndName, srvcName;
+
+// This name must be unique to each task (maybe host name + task name with an instance number)
+	serverName = "MyTaskName";
+	cmndName = serverName+"/"+"Command";
+	srvcName = serverName+"/"+"State";
+
+	taskState = new DimService(srvcName.c_str(), "NOT_READY");
+	taskCmnd = new TaskCmnd(cmndName.c_str());
+	DimServer::start(serverName.c_str());
+
+// When/if you need to update the state...
+	taskState->updateService("READY");
+	while(1)
+	{
+// Your main loop
+		sleep(10);
+	}
+}
+
