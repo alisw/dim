@@ -84,6 +84,7 @@ endif
 ifeq ($(OS),Linux)
 	CC = gcc
 	CXX = g++
+	LDFLAGS += '-Wl,-rpath,$$ORIGIN'
 ifeq ($(ARCH),PPC)
 	CFLAGS +=  -Wall -DMIPSEB -DPROTOCOL=1 -Dunix -Dlinux -fPIC
 else

@@ -2982,6 +2982,16 @@ int read_str_int(char *str)
   return(i);
 }
 
+longlong read_str_longlong(char *str)
+{
+	longlong il;
+	if ((str[0] == '0') && (str[1] == 'x'))
+		sscanf(str + 2, "%llx", &il);
+	else
+		sscanf(str, "%lld", &il);
+	return(il);
+}
+
 int read_str_char(char *str, char *cc)
 {
   int num;
@@ -3027,7 +3037,19 @@ char cc;
     num = 1000000;
   switch(type)
   {
-    case 'L':
+  case 'X':
+  case 'x':
+	  for (i = 0; i<num; i++)
+	  {
+		  *(longlong *)ptr = read_str_longlong(strp);
+		  ptr = (longlong *)ptr + 1;
+		  if ((strp = strchr(strp, ' ')))
+			  strp++;
+		  else
+			  break;
+	  }
+	  break;
+  case 'L':
     case 'l':
     case 'I':
     case 'i':

@@ -1032,8 +1032,8 @@ void get_server_node()
 {
 Widget id,sel_id;
 int i, j, n_nodes, curr_index = 0;
-char nodes_str[MAX_NODE_NAME*MAX_CONNS*2], max_str[MAX_NODE_NAME];
-char *ptr, *nodeptrs[MAX_CONNS*2], *curr_str, *sptr;
+char nodes_str[MAX_NODE_NAME*MAX_CONNS*10], max_str[MAX_NODE_NAME];
+char *ptr, *nodeptrs[MAX_CONNS*10], *curr_str, *sptr;
 int get_nodes();
 
 	sel_id = put_selection(DID_SEL_NODE,"Node Selection");

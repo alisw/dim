@@ -1,5 +1,5 @@
 
-                    DIM version 20r27 Release Notes
+                    DIM version 20r30 Release Notes
 
 Notes 1 and 2 for Unix Users only
 NOTE 1: In order to "make" DIM two environment variables should be set:
@@ -16,7 +16,25 @@ NOTE 2: The Name Server (Dns), DID, servers and clients (if running in
 	logfile ex:
 		Dns </dev/null >& dns.log &
 
-NOTE 3: The Version Number service provided by servers is now set to 2027.
+NOTE 3: The Version Number service provided by servers is now set to 2030.
+
+19/03/2021
+Changes for version 2030:
+    - DID is now statically linked to avoid looking for Motif libraries.
+
+
+02/10/2020
+Changes for version 2029:
+    - WebDID could not send long int ('X' format) Commands - fixed.
+
+
+29/09/2020
+Changes for version 2028:
+    - Modified makefiles such that DIM executables (DNS, DID) look for the DIM library first 
+      in the same directory of the executable (like in Windows). Very usefull for JCOP Framework.
+    - DID crashed when the DNS was serving a long list of server nodes - fixed.
+    - DimBridge could crash when parsing the command line parameters - fixed by A.Kuryakin
+
 
 28/02/2020
 Changes for version 2027:

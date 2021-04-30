@@ -107,6 +107,7 @@ int main()
 
 	DimInfo servint1(dnsid, "TEST/INTVAL", -1);
 	servstr1 = new StrService(dnsid);
+	if (servstr1) {}
 	while(1)
 	{
 		sleep(10);

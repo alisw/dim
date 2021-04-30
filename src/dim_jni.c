@@ -416,7 +416,7 @@ void send_callback(jobject* _theCompletionHandler, int* _status)
   JNIEnv* env;
   int doit;
 
-  DBGe(dim_Dbg_SEND_CALLBACK) printf("DimJNI: client SEND_CALLBACK status %08lx:%d\n", (dim_long)_status, *_status);
+  DBGe(dim_Dbg_SEND_CALLBACK) printf("DimJNI: client SEND_CALLBACK status %lx:%d\n", (dim_long)_status, *_status);
 
   doit = dim_jni_attachThread(&env);
 //  (*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
@@ -867,7 +867,7 @@ void decodeData(jobject* _theDataDecoder, void* dataAddress, int* _dataSize, int
 /* This call back is called when there is new data for a client subscription */
 void info_service_callback(jobject* _theDataDecoder, void* dataAddress, int* _dataSize)
 {
-	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK(data: %08lx(%08x))\n", (dim_long) dataAddress, *_dataSize);
+	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK(data: %lx(%08x))\n", (dim_long) dataAddress, *_dataSize);
 
   decodeData(_theDataDecoder, dataAddress, _dataSize, 0);
 }
@@ -876,7 +876,7 @@ void info_service_callback(jobject* _theDataDecoder, void* dataAddress, int* _da
 /* This call back is called when a client once_only subscription completes (so we clean up) */
 void info_service_callback_with_cleanup(jobject* _theDataDecoder, void* dataAddress, int* _dataSize)
 {
-	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK/ONCE_ONLY(data: %08lx(%08x))\n", (dim_long)dataAddress, *_dataSize);
+	DBGe(dim_Dbg_INFO_CALLBACK) printf("DimJNI: INFO_CALLBACK/ONCE_ONLY(data: %lx(%08x))\n", (dim_long)dataAddress, *_dataSize);
 
   decodeData(_theDataDecoder, dataAddress, _dataSize, 1);
 
@@ -1009,7 +1009,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_infoService
 
 
   ret = (jint)request_service((char *)info, service_type, timeout, 0, 0, callback_function, (dim_long)callback_param, &no_link, 0, stamped, 0);
-  DBGx(dim_Dbg_INFO_SERVICE) printf("DimJNI: client infoService(%s, DataDecoder@0x%08lx, mode=%d, timeout=%d ) returns %d\n", info, (dim_long)theNativeDataDecoder, mode, timeout, ret);
+  DBGx(dim_Dbg_INFO_SERVICE) printf("DimJNI: client infoService(%s, DataDecoder@0x%lx, mode=%d, timeout=%d ) returns %d\n", info, (dim_long)theNativeDataDecoder, mode, timeout, ret);
   (*env)->ReleaseStringUTFChars(env, name, info);
 
   if(mode & dim_Native_F_WAIT)
@@ -1262,7 +1262,7 @@ void server_getInfo_callback(jobject* _dataEncoder, void* *address, int *size)
 		*size     = (*env)->GetIntField(env, theMemory, NativeDataMemory_dataSize);
 //		printf("data address = %x, data size = %d\n",*address, *size);
 	}
-	DBGx(dim_Dbg_SERVICE_CALLBACK) printf("DimJNI: server_SERVICE_CALLBACK(dataEncoder=%08lx)\n        ==>    data: %08lx size %08x\n", (dim_long)dataEncoder, (dim_long) *address, *size); 
+	DBGx(dim_Dbg_SERVICE_CALLBACK) printf("DimJNI: server_SERVICE_CALLBACK(dataEncoder=%lx)\n        ==>    data: %lx size %08x\n", (dim_long)dataEncoder, (dim_long) *address, *size); 
 
 	if ((*env)->ExceptionOccurred(env)) (*env)->ExceptionDescribe(env); // clear any possible exception, if we do not do this, all further methods will fail!!
 	if(doit)
@@ -1408,7 +1408,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_addService
  	dataEncoder = (*env)->NewGlobalRef(env, dataEncoder);
 	sid = (jint)dis_add_service(serviceNameUTF, serviceTypeUTF, 0, 0, server_getInfo_callback, dataEncoder);
 
-	DBGx(dim_Dbg_ADD_SERVICE) printf("DimJNI: Server.addService(%s,%s, @%08lx)=%d\n",serviceNameUTF, serviceTypeUTF, (dim_long)dataEncoder, sid);
+	DBGx(dim_Dbg_ADD_SERVICE) printf("DimJNI: Server.addService(%s,%s, @%lx)=%d\n",serviceNameUTF, serviceTypeUTF, (dim_long)dataEncoder, sid);
 
 	(*env)->ReleaseStringUTFChars(env, serviceName, serviceNameUTF);
 	(*env)->ReleaseStringUTFChars(env, serviceType, serviceTypeUTF);
@@ -1419,7 +1419,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_addService
 void server_cmnd_callback(jobject* _theDataDecoder, void* dataAddress, int* _dataSize)
 {
 
-	DBGe(dim_Dbg_CMND_CALLBACK) printf("DimJNI: server CMND_CALLBACK(data: %08lx(%08x))\n", (dim_long) dataAddress, *_dataSize);
+	DBGe(dim_Dbg_CMND_CALLBACK) printf("DimJNI: server CMND_CALLBACK(data: %lx(%08x))\n", (dim_long) dataAddress, *_dataSize);
 
   decodeData(_theDataDecoder, dataAddress, _dataSize, 0);
 }
@@ -1442,7 +1442,7 @@ JNIEXPORT jint JNICALL Java_dim_Server_addCommand
  	dataDecoder = (*env)->NewGlobalRef(env, dataDecoder);
 	sid = (jint)dis_add_cmnd(serviceNameUTF, serviceTypeUTF, server_cmnd_callback, dataDecoder);
 
-	DBGx(dim_Dbg_ADD_CMND) printf("DimJNI: Server.addCmnd(%s,%s, @%08lx) = %d\n",serviceNameUTF, serviceTypeUTF, (dim_long) dataDecoder, sid);
+	DBGx(dim_Dbg_ADD_CMND) printf("DimJNI: Server.addCmnd(%s,%s, @%lx) = %d\n",serviceNameUTF, serviceTypeUTF, (dim_long) dataDecoder, sid);
 
 	(*env)->ReleaseStringUTFChars(env, serviceName, serviceNameUTF);
 	(*env)->ReleaseStringUTFChars(env, serviceType, serviceTypeUTF);
@@ -2063,7 +2063,7 @@ JNIEXPORT jlong JNICALL Java_dim_MutableMemory_allocateNativeDataBlock
 	if(nativeClass){}
 //	DBGe(dim_Dbg_MEMORY_ALLOCATE) ; /* report only */
   address = (jlong) malloc((size_t)size);
-	DBGx(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.allocateNativeDataBlock of %d bytes at 0x%08lx\n", size, address);
+	DBGx(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.allocateNativeDataBlock of %d bytes at 0x%lx\n", size, address);
   return address;
 }
 
@@ -2077,7 +2077,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_releaseNativeDataBlock
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.releaseNativeDataBlock 0x%08lx\n", desc);
+	DBGe(dim_Dbg_MEMORY_ALLOCATE) printf("DimJNI: MutableMemory.releaseNativeDataBlock 0x%lx\n", desc);
  //printf("free %08X\n", desc);
  	free((void*)desc);
 	return;
@@ -2093,7 +2093,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setBoolean
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setBoolean(0x%08lx, %02x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setBoolean(0x%lx, %02x)\n", nativeDataAddress, data);
 	*(jboolean*)nativeDataAddress = data;
 }
 
@@ -2107,7 +2107,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setChar
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setChar(0x%08lx, %02x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setChar(0x%lx, %02x)\n", nativeDataAddress, data);
 	*(jchar*)nativeDataAddress = data;
 }
 
@@ -2121,7 +2121,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setByte
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setByte(0x%08lx, %02x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setByte(0x%lx, %02x)\n", nativeDataAddress, data);
 	*(jbyte*)nativeDataAddress = data;
 }
 
@@ -2135,7 +2135,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setShort
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setShort(0x%08lx, %04x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setShort(0x%lx, %04x)\n", nativeDataAddress, data);
 	*(jshort*)nativeDataAddress = data;
 }
 
@@ -2149,7 +2149,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setInt
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setInt(0x%08lx, %0x)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setInt(0x%lx, %0x)\n", nativeDataAddress, data);
 	*(jint*)nativeDataAddress = data;
 }
 
@@ -2163,7 +2163,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setLong
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setLong(0x%08lx, %08x)\n", nativeDataAddress, (unsigned)data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setLong(0x%lx, %08x)\n", nativeDataAddress, (unsigned)data);
 	*(jlong*)nativeDataAddress = data;
 }
 
@@ -2177,7 +2177,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setFloat
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setFloat(0x%08lx, %f)\n", nativeDataAddress, data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setFloat(0x%lx, %f)\n", nativeDataAddress, data);
 	*(jfloat*)nativeDataAddress = data;
 }
 
@@ -2191,7 +2191,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setDouble
 {
 	if(env){}
 	if(nativeClass){}
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setDouble(0x%08lx, %08x)\n", nativeDataAddress, (unsigned)data);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setDouble(0x%lx, %08x)\n", nativeDataAddress, (unsigned)data);
 	*(jdouble*)nativeDataAddress = data;
 }
 
@@ -2205,7 +2205,7 @@ JNIEXPORT void JNICALL Java_dim_MutableMemory_setString
 {
 	const char* charData = (*env)->GetStringUTFChars(env, data, 0);
 
-	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setString(0x%08lx, %s)\n", nativeDataAddress, charData);
+	DBGe(dim_Dbg_MUTABLE_MEMORY) printf("DimJNI: MutableMemory.setString(0x%lx, %s)\n", nativeDataAddress, charData);
 
 	if(nativeClass){}
 	strcpy((char*)nativeDataAddress, charData);
@@ -2395,7 +2395,7 @@ JNIEXPORT jlong JNICALL Java_dim_ObjectDescriptor_newObjectDescriptor
 	descriptor->entries = 0;
 	descriptor->maxEntries = maxEntries;
 
-	DBGx(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.newObjectDescriptor %08lx\n", (dim_long)descriptor);
+	DBGx(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.newObjectDescriptor %lx\n", (dim_long)descriptor);
 	return (dim_long) descriptor;
 }
 
@@ -2431,7 +2431,7 @@ JNIEXPORT jint JNICALL Java_dim_ObjectDescriptor_addFieldToObjectDescriptor
 
 	// TODO throw an error if there is no such FieldID
 
-	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.addFieldToObjectDescriptor %08lx Field %s Type %s\n", (dim_long) desc, name, type);
+	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.addFieldToObjectDescriptor %lx Field %s Type %s\n", (dim_long) desc, name, type);
 	// TODO: if(entry==NULL) throw out-of-memory exception, set length to 0
 
 	// TODO: if(fieldType == "I") field_type = f_int; etc
@@ -2529,7 +2529,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_deleteObjectDescriptor
 	objectDescriptor_type* descriptor = (objectDescriptor_type*) desc;
  
 	if(nativeClass){}
-	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.deleteObjectDescriptor %08lx\n", (dim_long)desc);
+	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.deleteObjectDescriptor %lx\n", (dim_long)desc);
 	(*env)->DeleteGlobalRef(env, descriptor->objectClass);
 //printf("free descriptor\n");
 	free(descriptor->entry);
@@ -2553,7 +2553,7 @@ JNIEXPORT void JNICALL Java_dim_ObjectDescriptor_copyIntoObject
 	objectDescriptor_type* descriptor = (objectDescriptor_type*) desc;
 	jclass objectClass = descriptor->objectClass;
 
-	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.copyIntoObject %08lx\n", (dim_long)desc);
+	DBGe(dim_Dbg_DESCRIPTORS) printf("DimJNI: Native.copyIntoObject %lx\n", (dim_long)desc);
 
 	if(nativeClass){}
 	// test if object can be cast to object class

@@ -22,8 +22,8 @@ TT t;
 
 int big_buff[1024];
 
+int testDimInt = 0;
 int testDimLong = 0;
-
 longlong testDimXLong = 0;
 
 
@@ -36,6 +36,15 @@ void cmnd_rout(int *tag, TT *buf, int *size)
 	       (int)sizeof(TT));
 	printf("buf->i = %d, buf->d = %2.2f, buf->s = %d, buf->c = %c, buf->f = %2.2f, buf->str = %s\n",
 			buf->i,buf->d,buf->s,buf->c,buf->f,buf->str);
+}
+
+void cmnd_rout_long(int *tag, longlong *buf, int *size)
+{
+
+	if (tag) {}
+	dim_print_date_time();
+	printf("Command received, size = %d\n", *size);
+	printf("contents = %lld, %llx\n", *buf, *buf);
 }
 
 void client_exited(int *tag)
@@ -67,7 +76,7 @@ float atlas_arr[10];
 */
 int main(int argc, char **argv)
 {
-	int i, id/*, big_ids[20]*/;
+	int i, id/*, big_ids[20]*/, xlong_id, int_id;
 	char aux[80];
 	char name[84]/*, name1[132]*/;
 	char srvname[64];
@@ -146,15 +155,24 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 	snprintf(aux, sizeof(aux),"%s/TEST_CMD",srvname);
 	dis_add_cmnd(aux,"l:3;d:1;s:1;c:1;s:1;f:1;c:20",cmnd_rout, 0);
 
+	snprintf(aux, sizeof(aux), "%s/Service_DimInt", srvname);
+	int_id = dis_add_service(aux, "I", &testDimInt, sizeof(testDimInt),
+		(void *)0, 0);
 	snprintf(aux, sizeof(aux), "%s/Service_DimLong", srvname);
 	dis_add_service(aux, "L", &testDimLong, sizeof(testDimLong),
 		(void *)0, 0);
 	snprintf(aux, sizeof(aux), "%s/Service_DimXLong", srvname);
-	dis_add_service(aux, "X", &testDimXLong, sizeof(testDimXLong),
+	xlong_id = dis_add_service(aux, "X", &testDimXLong, sizeof(testDimXLong),
 		(void *)0, 0);
-	printf("Dim X size long %ld\n", sizeof(long));
-	printf("Dim X size longlong %ld\n", sizeof(longlong));
-	printf("Dim X size long long %ld\n", sizeof(long long));
+/*
+	printf("Dim X size long %zd\n", sizeof(long));
+	printf("Dim X size pointer %zd\n", sizeof(void *));
+	printf("Dim X size dim_long %zd\n", sizeof(dim_long));
+	printf("Dim X size longlong %zd\n", sizeof(longlong));
+	printf("Dim X size long long %zd\n", sizeof(long long));
+*/
+	snprintf(aux, sizeof(aux), "%s/TEST_XCMD", srvname);
+	dis_add_cmnd(aux, "X", cmnd_rout_long, 0);
 	/*
 	big_buff[0] = 1;
 	for(i = 0; i < 20; i++)
@@ -191,6 +209,10 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 	while(1)
 	{
 		index++;
+		testDimXLong++;
+		dis_update_service(xlong_id);
+		testDimInt = -index;
+		dis_update_service(int_id);
 /*
 		for(i = 0; i < 20; i++)
 		{
@@ -203,7 +225,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 /*
 		pause();
 		*/
-		sleep(10);
+		sleep(1);
 /*
 		dis_update_service(id);
 */

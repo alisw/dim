@@ -41,7 +41,7 @@ void do_work(void *tag)
 	char name[64];
 	int out, in;
 	
-	sprintf(name,"TESTRPC%ld/INT",(dim_long)tag);
+	sprintf(name,"TESTRPC%lld/INT",(dim_long)tag);
 	myRpc = new DimRpcInfo(name, 10, -1);
 //	myRpc = new Rpc(name);
 

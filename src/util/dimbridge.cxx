@@ -251,7 +251,10 @@ int parse_cmd_line(int argc, char **argv, int *rate, int *copyFlag)
 	char *ptr, *ptr1;
 	int i;
 
-	strcpy(from_node, DimClient::getDnsNode());
+	strcpy(from_node, "");
+	ptr = DimClient::getDnsNode();
+	if(ptr) 
+		strcpy(from_node, ptr);
 	strcpy(to_node, "");
 	n_replaces = 0;
 	*rate = 0;

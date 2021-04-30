@@ -59,7 +59,8 @@ ifeq ($(X64),yes)
 else
 	X11LIB = /usr/X11R6/lib
 endif
-	MORE_FLAGS += -lpthread
+#	MORE_FLAGS += -lpthread
+	MORE_FLAGS = -lpthread
 endif
 ifeq ($(OS),Darwin)
 	MOTIFINC = /usr/OpenMotif/include
@@ -77,7 +78,9 @@ $(ODIR)/did.o:	$(SDIR)/did.c $(SDIR)/did.h
 	$(CC) $(CFLAGS) -o $(ODIR)/did.o -c $(SDIR)/did.c
 
 $(ODIR)/did: $(ODIR)/did.o $(ODIR)/dui_util.o $(ODIR)/libdim.a
-	$(CC) $(CFLAGS) $(ODIR)/did.o $(ODIR)/dui_util.o -L$(DIMDIR)/$(ODIR) -ldim $(LFLAGS) $(MORE_FLAGS) -lXm -lXt -lX11 -o $(ODIR)/did
+	$(CC) $(CFLAGS) $(LDFLAGS) $(ODIR)/did.o $(ODIR)/dui_util.o \
+	-L$(DIMDIR)/$(ODIR) -ldim $(LFLAGS) $(MORE_FLAGS) -Wl,-Bstatic -lXm -lMrm -Wl,-Bdynamic -lXmu -lpng -ljpeg  -lXext -lXft -lXt -lSM -lICE -lX11 -lfontconfig -lXp \
+	-o $(ODIR)/did
 
 
 
