@@ -8,8 +8,17 @@ SHAREABLE=
 
 IDIR = ./dim
 
-EXTRALIBS = 
-FLAGS = 
+EXTRALIBS =
+FLAGS =
+
+# The C sources use pre-C23 idioms: K&R empty-paren prototypes (which GCC 14+/C23
+# now read as (void)) and type-erased "void (*)()" callback slots that are
+# genuinely called with differing arities, so they cannot be given fixed
+# prototypes. Compile the C (not C++) sources as gnu11 to keep the historic
+# "unspecified arguments" meaning, and downgrade the GCC 14+ pointer/int
+# permerrors back to warnings. Appended to CC (never CFLAGS, which the C++
+# rules share) so g++ never sees these C-only flags.
+LEGACY_CFLAGS = -std=gnu11 -Wno-error=incompatible-pointer-types -Wno-error=int-conversion -Wno-error=implicit-function-declaration -Wno-error=implicit-int -Wno-error=return-mismatch
 
 CFLAGS = $(FLAGS) -g -I$(IDIR)
 EXCFLAGS = $(FLAGS) -g -I$(IDIR) 
@@ -82,7 +91,7 @@ endif
 endif
 endif
 ifeq ($(OS),Linux)
-	CC = gcc
+	CC = gcc $(LEGACY_CFLAGS)
 	CXX = g++
 	LDFLAGS += '-Wl,-rpath,$$ORIGIN'
 ifeq ($(ARCH),PPC)
@@ -97,7 +106,7 @@ ifneq ($(SHAREABLE),no)
 endif
 endif
 ifeq ($(OS),Darwin)
-	CC = gcc
+	CC = gcc $(LEGACY_CFLAGS)
 	CXX = g++
 	SHAREABLE = no
 	CFLAGS += -DMIPSEL -DPROTOCOL=1 -Dunix -Dlinux -Ddarwin -fPIC
